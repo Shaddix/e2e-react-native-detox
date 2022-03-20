@@ -31,8 +31,8 @@ stages:
 #
 #              echo "Android: Creating AVD.."
 #              echo no | /Users/runner/Library/Android/sdk/tools/bin/avdmanager create avd -n Pixel_API_27_AOSP -d pixel --package "system-images;android-27;default;x86_64"
-              #cp config.ini /Users/runner/.android/avd/Pixel_API_30_AOSP.avd/config.ini
-
+#              #cp config.ini /Users/runner/.android/avd/Pixel_API_30_AOSP.avd/config.ini
+#
               echo "Android: Executing Detox tests..."
               npx detox test --configuration android.emu.release --headless --loglevel verbose
             displayName: 'Build app for tests'

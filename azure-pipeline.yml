@@ -15,6 +15,9 @@ stages:
               echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;default;x86_64"
               echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd --force --name Pixel_API_30_AOSP --device "pixel_4" -k 'system-images;android-30;default;x86_64'
               $ANDROID_HOME/emulator/emulator -list-avds
+
+              $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+
             condition: ne(variables.AVD_IMAGES_RESTORED, 'true')
             displayName: 'Download Android Emulator Image'
 

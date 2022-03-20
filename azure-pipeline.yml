@@ -1,0 +1,39 @@
+pool:
+  vmImage: 'macos-latest'
+
+stages:
+  - stage: E2E
+    jobs:
+      - job: Run_E2E_Tests
+        steps:
+          - script: yarn
+
+          - script: yarn global add detox-cli
+            displayName: Install Detox
+
+          - script: |
+              echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;default;x86_64"
+              echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd --force --name Pixel_API_30_AOSP --device "pixel_4" -k 'system-images;android-30;default;x86_64'
+              $ANDROID_HOME/emulator/emulator -list-avds
+            condition: ne(variables.AVD_IMAGES_RESTORED, 'true')
+            displayName: 'Download Android Emulator Image'
+
+          - script: |
+              echo "Android: Building the project for Detox tests..."
+              npx detox build --configuration android.emu.release --loglevel verbose
+
+              echo "Android: Downloading android image..."
+              /Users/runner/Library/Android/sdk/tools/bin/sdkmanager "system-images;android-27;default;x86_64"
+
+              echo "Android: Accepting licenses for android images.."
+              echo N | /Users/runner/Library/Android/sdk/tools/bin/sdkmanager --licenses
+              touch /Users/runner/.android/repositories.cfg
+
+              echo "Android: Creating AVD.."
+              echo no | /Users/runner/Library/Android/sdk/tools/bin/avdmanager create avd -n Pixel_API_27_AOSP -d pixel --package "system-images;android-27;default;x86_64"
+              cp app-center/config.ini /Users/runner/.android/avd/Pixel_API_30_AOSP.avd/config.ini
+
+              echo "Android: Executing Detox tests..."
+              npx detox test --configuration android.emu.release --headless --loglevel verbose
+            displayName: 'Build app for tests'
+

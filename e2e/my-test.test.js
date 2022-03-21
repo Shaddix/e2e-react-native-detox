@@ -3,7 +3,7 @@
 describe('Example', () => {
   beforeEach(async () => {
 
-    await device.reloadReactNative();
+    //await device.reloadReactNative();
   });
 
   it('should show "Step One" at the begging', async () => {

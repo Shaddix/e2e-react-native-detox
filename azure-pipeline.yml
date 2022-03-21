@@ -6,32 +6,51 @@ stages:
     jobs:
       - job: Run_E2E_Tests
         steps:
-          - script: yarn
-
-          - script: yarn global add detox-cli
-            displayName: Install Detox
-
           - script: |
-              echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;default;x86_64"
-              echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd --force --name Pixel_API_30_AOSP --device "pixel_4" -k 'system-images;android-30;default;x86_64'
-              
-              nohup $ANDROID_HOME/emulator/emulator -avd android_emulator -skin 1080x1920 -no-snapshot -no-audio -no-boot-anim -accel auto -gpu auto -qemu -lcd-density 420 > /dev/null 2>&1 & 
+              # Install AVD files
+              echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
+
+              # Create emulator
+              echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-27;google_apis;x86' --force
 
               $ANDROID_HOME/emulator/emulator -list-avds
 
+              echo "Starting emulator"
+
+              # Start emulator in background
+              nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -no-snapshot > /dev/null 2>&1 &
               $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
 
-              $ANDROID_HOME/emulator/emulator -list-avds
+              $ANDROID_HOME/platform-tools/adb devices
 
-
-            condition: ne(variables.AVD_IMAGES_RESTORED, 'true')
-            displayName: 'Download Android Emulator Image'
-
-          - script: |
-              echo "Android: Building the project for Detox tests..."
-              npx detox build --configuration android.emu.release --loglevel verbose
-
-              echo "Android: Executing Detox tests..."
-              npx detox test --configuration android.emu.release --headless --loglevel verbose
-            displayName: 'Build app for tests'
-
+              echo "Emulator started"
+            displayName: run android emulator
+#          - script: yarn
+#
+#          - script: yarn global add detox-cli
+#            displayName: Install Detox
+#
+#          - script: |
+#              echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;default;x86_64"
+#              echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd --force --name Pixel_API_30_AOSP --device "pixel_4" -k 'system-images;android-30;default;x86_64'
+#
+#              nohup $ANDROID_HOME/emulator/emulator -avd android_emulator -skin 1080x1920 -no-snapshot -no-audio -no-boot-anim -accel auto -gpu auto -qemu -lcd-density 420 > /dev/null 2>&1 &
+#
+#              $ANDROID_HOME/emulator/emulator -list-avds
+#
+#              $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+#
+#              $ANDROID_HOME/emulator/emulator -list-avds
+#
+#
+#            condition: ne(variables.AVD_IMAGES_RESTORED, 'true')
+#            displayName: 'Download Android Emulator Image'
+#
+#          - script: |
+#              echo "Android: Building the project for Detox tests..."
+#              npx detox build --configuration android.emu.release --loglevel verbose
+#
+#              echo "Android: Executing Detox tests..."
+#              npx detox test --configuration android.emu.release --headless --loglevel verbose
+#            displayName: 'Build app for tests'
+#

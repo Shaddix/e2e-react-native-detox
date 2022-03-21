@@ -13,7 +13,7 @@
   "dependencies": {
     "randomcolor": "^0.5.4",
     "react": "16.8.6",
-    "react-native": "0.60.5",
+    "react-native": "0.67.4",
     "react-swipeable-views-native": "^0.13.2"
   },
   "devDependencies": {
@@ -26,7 +26,7 @@
     "eslint-plugin-detox": "^1.0.0",
     "eslint-plugin-jest": "^22.17.0",
     "jest": "^24.1.0",
-    "metro-react-native-babel-preset": "0.54.1",
+    "metro-react-native-babel-preset": "0.67.0",
     "react-test-renderer": "16.8.6"
   },
   "jest": {

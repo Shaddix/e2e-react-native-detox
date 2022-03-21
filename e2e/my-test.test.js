@@ -2,11 +2,12 @@
 
 describe('Example', () => {
   beforeEach(async () => {
-    await device.launchApp();
+
     await device.reloadReactNative();
   });
 
   it('should show "Step One" at the begging', async () => {
+    await device.launchApp();
     await expect(element(by.text('Step One'))).toBeVisible();
   });
   //

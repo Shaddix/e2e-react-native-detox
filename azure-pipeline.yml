@@ -49,9 +49,9 @@ stages:
 #
           - script: |
               echo "Android: Building the project for Detox tests..."
-              npx detox build --configuration android.emu.release --loglevel verbose
+              npx detox build --configuration android.emu.debug --loglevel verbose
 
               echo "Android: Executing Detox tests..."
-              npx detox test --configuration android.emu.release --headless --loglevel verbose
+              npx detox test --configuration android.emu.debug --headless --loglevel verbose --record-logs all
             displayName: 'Build app for tests'
 

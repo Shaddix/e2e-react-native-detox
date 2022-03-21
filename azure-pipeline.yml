@@ -8,10 +8,10 @@ stages:
         steps:
           - script: |
               # Install AVD files
-              echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
+              echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-30;google_apis;x86'
 
               # Create emulator
-              echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+              echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-30;google_apis;x86' --force
 
               $ANDROID_HOME/emulator/emulator -list-avds
 
@@ -25,10 +25,11 @@ stages:
 
               echo "Emulator started"
             displayName: run android emulator
-#          - script: yarn
-#
-#          - script: yarn global add detox-cli
-#            displayName: Install Detox
+
+          - script: yarn
+
+          - script: yarn global add detox-cli
+            displayName: Install Detox
 #
 #          - script: |
 #              echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;default;x86_64"
@@ -46,11 +47,11 @@ stages:
 #            condition: ne(variables.AVD_IMAGES_RESTORED, 'true')
 #            displayName: 'Download Android Emulator Image'
 #
-#          - script: |
-#              echo "Android: Building the project for Detox tests..."
-#              npx detox build --configuration android.emu.release --loglevel verbose
-#
-#              echo "Android: Executing Detox tests..."
-#              npx detox test --configuration android.emu.release --headless --loglevel verbose
-#            displayName: 'Build app for tests'
-#
+          - script: |
+              echo "Android: Building the project for Detox tests..."
+              npx detox build --configuration android.emu.release --loglevel verbose
+
+              echo "Android: Executing Detox tests..."
+              npx detox test --configuration android.emu.release --headless --loglevel verbose
+            displayName: 'Build app for tests'
+
